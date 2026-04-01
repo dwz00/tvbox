@@ -1,0 +1,170 @@
+# -*- coding: utf-8 -*-
+import os, asyncio, aiohttp, requests, json, hashlib, ssl, urllib3, commentjson
+from pathlib import Path
+ssl._create_default_https_context = ssl._create_unverified_context
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+class GetSrc:
+    def __init__(self, username, repo, token, url, target='tvbox.json'):
+        self.username = username
+        self.repo_name = repo
+        self.token = token
+        self.url = str(url) if url else ""
+        self.target = target
+        self.base_path = Path(".").absolute()
+        self.jar_path = self.base_path / "jar"
+        self.api_path = self.base_path / "api" / "drpy2"
+        self.jar_path.mkdir(parents=True, exist_ok=True)
+        self.api_path.mkdir(parents=True, exist_ok=True)
+        self.s = requests.Session()
+        self.s.verify = False 
+        # --- 必须添加这一行，否则 run 方法找不到它 ---
+        self.jar_suffix = 'jar' 
+
+    async def download_drpy2_files(self):
+        """同步核心 JS 依赖"""
+        files = ["drpy2.min.js", "jquery.min.js", "crypto-js.js", "spider.js"] # 简化列表测试
+        async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
+            for f_name in files:
+                target = self.api_path / f_name
+                if target.exists(): continue
+                # 直接用 GitHub 官方地址，Actions 访问很快
+                raw_url = f"https://githubusercontent.com/{f_name}"
+                try:
+                    async with session.get(raw_url, timeout=15) as res:
+                        if res.status == 200:
+                            with open(target, "wb") as f: f.write(await res.read())
+                            print(f"已同步: {f_name}")
+                except: print(f"同步失败: {f_name}")
+
+    def run(self):
+        if not self.url or "http" not in self.url:
+            print(f"无效的 URL 地址: {self.url}")
+            return
+
+        all_sites = []
+        urls = [u.strip() for u in self.url.split(',') if u.strip()]
+        last_spider_name = ""
+
+        for u in urls:
+            print(f"正在抓取: {u}")
+            try:
+                res = self.s.get(u, timeout=15, verify=False)
+                data = commentjson.loads(res.text)
+                
+                # --- 1. 处理并本地化 Spider (Jar) ---
+                remote_spider = data.get('spider', '')
+                if remote_spider and remote_spider.startswith('http'):
+                    jar_hash = hashlib.md5(remote_spider.encode()).hexdigest()
+                    jar_name = f"{jar_hash}.{self.jar_suffix}"
+                    local_jar_file = self.jar_path / jar_name
+                    
+                    if not local_jar_file.exists():
+                        print(f"正在下载远程 Jar: {remote_spider}")
+                        try:
+                            jar_res = self.s.get(remote_spider, timeout=20, verify=False)
+                            with open(local_jar_file, 'wb') as f:
+                                f.write(jar_res.content)
+                            last_spider_name = jar_name
+                        except:
+                            print(f"Jar 下载失败: {remote_spider}")
+                    else:
+                        last_spider_name = jar_name
+
+                # --- 2. 站点去重 ---
+                sites = data.get('sites', [])
+                for s in sites:
+                    if s.get('api') and not any(x.get('api') == s.get('api') for x in all_sites):
+                        all_sites.append(s)
+            except Exception as e:
+                print(f"抓取失败 {u}: {e}")
+    
+        # --- 3. 生成私有化地址 (智能查找本地 Jar) ---
+        if last_spider_name:
+            # 本次抓取成功拿到了新 Jar
+            my_spider_url = f"https://ghproxy.com{self.username}/{self.repo_name}/main/jar/{last_spider_name}"
+        else:
+            # 本次没抓到，尝试去 jar 文件夹找找有没有以前存下的旧 Jar
+            local_jars = list(self.jar_path.glob(f"*.{self.jar_suffix}"))
+            if local_jars:
+                # 如果有旧的，就用最新修改的那一个
+                latest_old_jar = max(local_jars, key=os.path.getmtime).name
+                my_spider_url = f"https://ghproxy.com/{self.username}/{self.repo_name}/main/jar/{latest_old_jar}"
+                print(f"本次未抓到 Jar，自动复用本地旧 Jar: {latest_old_jar}")
+            else:
+                # 实在没有，才用大厂保底链接（高天流云/饭太硬等）
+                my_spider_url = "https://ghp.cigaotianliuyun/gao/master/lib/spider.jar"
+                print("本地和远程都没找到 Jar，启用大厂保底链接")
+
+        # 打印一下看看对不对
+        print(f"生成的 Spider 链接: {my_spider_url}")
+
+        # --- 4. 构造最终配置 (合并直播源) ---
+        config = {
+            "spider": my_spider_url,
+            "sites": all_sites,
+            "lives": [{"name": "直播", "type": 0, "url": "https://githubusercontent.comssili126/tv/main/itvlist.txt"}]
+        }
+
+        # --- 5. 统一写入文件 ---
+        for filename in [self.target, "all.json"]:
+            with open(self.base_path / filename, 'w', encoding='utf-8') as f:
+                json.dump(config, f, ensure_ascii=False, indent=4)
+            
+        print(f"🎉 处理成功！")
+        print(f"新的 Spider 地址: {my_spider_url}")
+        print(f"总计去重站点: {len(all_sites)}")
+
+        last_spider = ""
+        for u in urls:
+            print(f"正在抓取: {u}")
+            try:
+                res = self.s.get(u, timeout=15, verify=False)
+                # 使用 commentjson 解析
+                data = commentjson.loads(res.text)
+                
+                # 简单站点去重
+                sites = data.get('sites', [])
+                for s in sites:
+                    if s.get('api') and not any(x.get('api') == s.get('api') for x in all_sites):
+                        all_sites.append(s)
+                
+                if data.get('spider'): last_spider = data.get('spider')
+            except Exception as e:
+                print(f"抓取失败 {u}: {e}")
+
+        # 构造最终 JSON
+        config = {
+            "spider": last_spider,
+            "sites": all_sites,
+            "lives": [{"name": "直播", "type": 0, "url": "https://ghproxy.com"}]
+        }
+
+        # --- 核心：写入文件 ---
+        with open(self.base_path / self.target, 'w', encoding='utf-8') as f:
+            json.dump(config, f, ensure_ascii=False, indent=4)
+        
+        with open(self.base_path / "all.json", 'w', encoding='utf-8') as f:
+            json.dump(config, f, ensure_ascii=False, indent=4)
+            
+        print(f"🎉 成功生成文件！总计 {len(all_sites)} 个站点。")
+
+if __name__ == "__main__":
+    import os
+    # 自动识别仓库
+    full_repo = os.getenv('GITHUB_REPOSITORY', 'dwz00/tvbox1')
+    if '/' in full_repo:
+        u_name, r_name = full_repo.split('/')
+    else:
+        u_name, r_name = "dwz00", "tvbox1"
+    
+    # 【修复重点】确保这里只是一个纯字符串，没有任何多余的括号
+
+    my_api_url = "https://raw.liucn.cc/box/m.json" 
+
+    tool = GetSrc(u_name, r_name, os.getenv('GITHUB_TOKEN'), my_api_url)
+    
+    
+    # 运行
+    asyncio.run(tool.download_drpy2_files())
+    tool.run()
