@@ -159,9 +159,12 @@ if __name__ == "__main__":
         u_name, r_name = "dwz00", "tvbox1"
     
     # 【修复重点】确保这里只是一个纯字符串，没有任何多余的括号
-
+    my_api_url = "https://raw.liucn.cc/box/m.json"
     my_api_url = "https://v.muzid.eu.org/a.json" 
-
+    my_api_url = "https://gcore.jsdelivr.net/gh/gaotianliuyun/gao@master/js.json"
+    my_api_url = "https://raw.liucn.cc/box/m.json" 
+    my_api_url = "http://home.jundie.top:81/top98.json" 
+    my_api_url = "http://ok321.top/tv"
     tool = GetSrc(u_name, r_name, os.getenv('GITHUB_TOKEN'), my_api_url)
     
     
