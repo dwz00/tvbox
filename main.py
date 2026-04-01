@@ -137,7 +137,7 @@ class GetSrc:
         config = {
             "spider": last_spider,
             "sites": all_sites,
-            "lives": [{"name": "直播", "type": 0, "url": "https://ghproxy.com"}]
+            "lives": [{"name": "直播", "type": 0, "url": "https://ghproxy.com{self.username}/{self.repo_name}/main/jar/{last_spider_name}"}]
         }
 
         # --- 核心：写入文件 ---
@@ -152,17 +152,16 @@ class GetSrc:
 if __name__ == "__main__":
     import os
     # 自动识别仓库
-    full_repo = os.getenv('GITHUB_REPOSITORY', 'dwz00/tvbox1')
+    full_repo = os.getenv('GITHUB_REPOSITORY', 'dwz00/tvbox')
     if '/' in full_repo:
         u_name, r_name = full_repo.split('/')
     else:
-        u_name, r_name = "dwz00", "tvbox1"
+        u_name, r_name = "dwz00", "tvbox"
     
-    # 【修复重点】确保这里只是一个纯字符串，没有任何多余的括号
-    # my_api_url = "https://raw.liucn.cc/box/m.json"
-    # my_api_url = "https://v.muzid.eu.org/a.json" 
-    my_api_url = "http://home.jundie.top:81/top98.json,http://ok321.top/tv,https://gcore.jsdelivr.net/gh/gaotianliuyun/gao@master/js.json" 
-    # my_api_url = "http://ok321.top/tv"
+    # 【修复重点】爬取地址用逗号分开，删除无法爬取的网址
+    
+    my_api_url = "https://raw.liucn.cc/box/m.json,https://v.muzid.eu.org/a.json,https://v.muzid.eu.org/xl.json,http://home.jundie.top:81/top98.json,https://gcore.jsdelivr.net/gh/gaotianliuyun/gao@master/js.json" 
+
     tool = GetSrc(u_name, r_name, os.getenv('GITHUB_TOKEN'), my_api_url)
     
     
