@@ -93,7 +93,7 @@ class GetSrc:
                 print(f"本次未抓到 Jar，自动复用本地旧 Jar: {latest_old_jar}")
             else:
                 # 实在没有，才用大厂保底链接（高天流云/饭太硬等）
-                my_spider_url = "https://ghproxy.com/gaotianliuyun/gao/master/lib/spider.jar"
+                my_spider_url = "https://ghproxy.com"
                 print("本地和远程都没找到 Jar，启用大厂保底链接")
 
         # 打印一下看看对不对
