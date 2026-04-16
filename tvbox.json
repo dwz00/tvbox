@@ -1617,130 +1617,6 @@
             "changeable": 0
         },
         {
-            "key": "360",
-            "name": "360",
-            "type": 3,
-            "api": "csp_SP360",
-            "searchable": 1,
-            "quickSearch": 1,
-            "filterable": 1
-        },
-        {
-            "key": "nbys",
-            "name": "泥巴(墙)",
-            "type": 3,
-            "api": "csp_Nbys",
-            "searchable": 1,
-            "quickSearch": 1,
-            "filterable": 1
-        },
-        {
-            "key": "csp_Alist",
-            "name": "Alist(SP)",
-            "type": 3,
-            "api": "csp_Alist",
-            "searchable": 0,
-            "playerType": 2,
-            "quickSearch": 0,
-            "filterable": 0,
-            "ext": {
-                "💢小雅": "http://alistxy.ganggang.live:5678",
-                "🦀9T(Adult)": "https://drive.9t.ee",
-                "🌤晴园的宝藏库": "https://alist.52qy.repl.co",
-                "🐭米奇妙妙屋": "https://anime.mqmmw.ga",
-                "💂小兵组网盘影视": "https://6vv.app",
-                "🐋一只鱼": "https://alist.youte.ml",
-                "🌊七米蓝": "https://al.chirmyram.com",
-                "🥼帅盘": "https://hi.shuaipeng.wang",
-                "🐉神族九帝": "https://alist.shenzjd.com",
-                "☃️姬路白雪": "https://pan.jlbx.xyz",
-                "🎧听闻网盘": "https://wangpan.sangxuesheng.com",
-                "💾DISK": "http://124.222.140.243:8080",
-                "🌨云播放": "https://quanzi.laoxianghuijia.cn",
-                "✨星梦": "https://pan.bashroot.top",
-                "💫触光": "https://pan.ichuguang.com",
-                "🕵️好汉吧": "https://8023.haohanba.cn",
-                "💢repl": "https://ali.liucn.repl.co",
-                "🌨秋雨分享": "https://share.laowang.me",
-                "💦讯维云盘": "https://pan.xwbeta.com"
-            }
-        },
-        {
-            "key": "csp_xb_lez",
-            "name": "乐猪(XBiu)",
-            "type": 3,
-            "api": "csp_XBiu",
-            "searchable": 1,
-            "quickSearch": 1,
-            "filterable": 0,
-            "ext": {
-                "homeUrl": "http://www.lezhutv.com/type/{cateId}-{datePg}.html",
-                "playlist": {
-                    "sort": 1
-                }
-            }
-        },
-        {
-            "key": "drpy_js_ddys",
-            "name": "低端影视(DRPY)",
-            "type": 3,
-            "api": "http://home.jundie.top:666/JS/dr_py/libs/drpy.min.js",
-            "ext": "http://home.jundie.top:666/JS/dr_py/js/ddys.js"
-        },
-        {
-            "key": "Gitcafe",
-            "name": "小纸条(新)",
-            "type": 3,
-            "api": "csp_Gitcafe",
-            "searchable": 1,
-            "playerType": 1,
-            "quickSearch": 1,
-            "filterable": 1,
-            "ext": "token;desc"
-        },
-        {
-            "key": "upyunsou",
-            "name": "Up云搜",
-            "type": 3,
-            "api": "csp_Upyunso",
-            "searchable": 1,
-            "quickSearch": 1,
-            "playerType": 1,
-            "filterable": 0,
-            "ext": "token;asc"
-        },
-        {
-            "key": "yisou",
-            "name": "宜搜",
-            "type": 3,
-            "api": "csp_Yisou",
-            "searchable": 1,
-            "quickSearch": 1,
-            "playerType": 1,
-            "filterable": 0
-        },
-        {
-            "key": "AliPS",
-            "name": "AliPS",
-            "type": 3,
-            "api": "csp_AliPS",
-            "searchable": 1,
-            "playerType": 1,
-            "quickSearch": 1,
-            "filterable": 1
-        },
-        {
-            "key": "push_agent",
-            "name": "推送",
-            "type": 3,
-            "api": "csp_PushAgent",
-            "searchable": 1,
-            "quickSearch": 1,
-            "playerType": 1,
-            "filterable": 1,
-            "ext": "token;desc"
-        },
-        {
             "key": "lf_js_search",
             "name": "搜索 | 路飞[js]",
             "type": 3,
@@ -2278,6 +2154,17 @@
             "filterable": 1,
             "timeout": 30,
             "ext": "./lib/token.json"
+        },
+        {
+            "key": "Gitcafe",
+            "name": "阿里 | 纸条[jar]",
+            "type": 3,
+            "api": "csp_Gitcafe",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 0,
+            "ext": "./lib/token.json",
+            "timeout": 30
         },
         {
             "key": "小紙條",
