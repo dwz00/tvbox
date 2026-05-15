@@ -1295,7 +1295,8 @@
             "quickSearch": 1,
             "changeable": 1,
             "ext": {
-                "Cloud-drive": "tvfan/Cloud-drive.txt"
+                "Cloud-drive": "tvfan/Cloud-drive.txt",
+                "siteUrl": "https://www.libvio.run"
             }
         },
         {
@@ -1608,8 +1609,8 @@
             }
         },
         {
-            "key": "fan",
-            "name": "导航 www.饭太硬.com",
+            "key": "cc",
+            "name": "请勿相信视频中任何广告",
             "type": 3,
             "api": "csp_XPathGuard",
             "searchable": 1,
