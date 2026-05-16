@@ -1186,7 +1186,7 @@
         },
         {
             "key": "点我切源",
-            "name": "新增嘟嘟盘，到【太太太硬了】领免费容量",
+            "name": "嘟嘟盘容量，到【太太太硬了】领取",
             "type": 3,
             "api": "csp_DouDouGuard",
             "indexs": 1,
@@ -1610,7 +1610,7 @@
         },
         {
             "key": "cc",
-            "name": "请勿相信视频中任何广告",
+            "name": "请勿信视频中任何广告",
             "type": 3,
             "api": "csp_XPathGuard",
             "searchable": 1,
