@@ -1241,7 +1241,7 @@
                 "ratio": 1
             },
             "playerType": 2,
-            "searchable": 1,
+            "searchable": 0,
             "quickSearch": 0,
             "changeable": 0
         },
@@ -1440,8 +1440,20 @@
             }
         },
         {
+            "key": "多多",
+            "name": "🏀多多┃看球",
+            "type": 3,
+            "api": "csp_DoubaoGuard",
+            "searchable": 0,
+            "quickSearch": 0,
+            "changeable": 0,
+            "style": {
+                "type": "list"
+            }
+        },
+        {
             "key": "超全",
-            "name": "⚽吃瓜┃看球",
+            "name": "🏐吃瓜┃看球",
             "type": 3,
             "api": "csp_LiveGzGuard",
             "searchable": 0,
